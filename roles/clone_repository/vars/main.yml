@@ -1,0 +1,3 @@
+---
+# vars file for roles/clone_repository
+clone_repository_git_protocol: False

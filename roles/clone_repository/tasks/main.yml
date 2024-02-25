@@ -1,0 +1,32 @@
+---
+# tasks file for roles/clone_repository
+- block:
+  - name: create Sources directory
+    file:
+      path: "/home/{{ansible_env['SUDO_USER']}}/Sources"
+      state: directory
+      owner: "{{ansible_env['SUDO_USER']}}"
+      group: "{{ansible_env['SUDO_USER']}}"
+
+  - name: git clone EDC Samples by http protocol
+    git:
+      repo: https://github.com/eclipse-edc/Samples.git
+      dest: "/home/{{ansible_env['SUDO_USER']}}/Sources/EDC_Samples"
+    when: not clone_repository_git_protocol
+
+  - name: git clone EDC Samples by git protocol
+    git:
+      repo: git@github.com:eclipse-edc/Samples.git
+      dest: "/home/{{ansible_env['SUDO_USER']}}/Sources/EDC_Samples"
+    when: clone_repository_git_protocol
+
+  - name: chown directory of repo
+    file:
+      path: "/home/{{ansible_env['SUDO_USER']}}/Sources/EDC_Samples"
+      state: directory
+      owner: "{{ansible_env['SUDO_USER']}}"
+      group: "{{ansible_env['SUDO_USER']}}"
+      recurse: yes
+
+  tags:
+    - clone_repository
